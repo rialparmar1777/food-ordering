@@ -13,9 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <nav className="p-4 bg-yellow-500 text-black font-bold text-center">
-          Food Ordering
-        </nav>
+        
         {children}
         <footer className="text-center p-4 mt-10 text-gray-600">
           © 2025 Food Ordering System. All Rights Reserved.
