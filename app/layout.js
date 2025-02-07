@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/lib/CartContext";
+import Footer from "@/components/Footer";
 
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -18,12 +19,8 @@ export default function RootLayout({ children }) {
         
       <CartProvider>
       {children}
-    </CartProvider>        <footer className="text-center p-4 mt-10 text-gray-600">
-          © 2025 Food Ordering System. All Rights Reserved.
-          <p className="text-sm">
-              Powered by <span className="font-semibold text-yellow-600">Rial</span>
-            </p>
-        </footer>
+    </CartProvider>       
+    <Footer /> 
       </body>
     </html>
   );
