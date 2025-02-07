@@ -14,7 +14,7 @@ export default function Home() {
         <h1 className="text-4xl sm:text-5xl font-bold text-center mt-6 text-primary">
           Welcome to Our Food Ordering System 🍽️
         </h1>
-        <p className="text-center text-gray-600 mt-2">
+        <p className="text-center text-gray-800 mt-2">
           Browse delicious meals from around the world!
         </p>
         <MealList />

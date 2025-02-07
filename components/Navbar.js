@@ -10,7 +10,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-[#717173] text-[#4b524e] p-4 shadow-lg relative z-10">
+    <nav className="bg-[#717173] text-[#4b524e] p-4 shadow-lg sticky top-0 z-20">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <h1 className="text-3xl font-bold text-[#000000] uppercase tracking-wider transform transition duration-500 hover:text-[#ffffff] hover:scale-105 cursor-pointer">
@@ -35,7 +35,7 @@ export default function Navbar() {
         {/* Right-side Cart & Mobile Menu Toggle */}
         <div className="flex items-center space-x-6">
           {/* Cart Icon */}
-          <Link href="/cart" className="relative group">
+          <Link href="/cart" className="relative group font-mono">
             <ShoppingCart size={28} className="transform transition duration-300 hover:scale-110 text-[#e17564]" />
             {cart.length > 0 && (
               <span className="absolute top-0 right-0 bg-[#872341] text-white rounded-full text-xs px-2">
