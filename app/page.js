@@ -17,6 +17,7 @@ export default function Home() {
         <p className="text-center text-gray-800 mt-2">
           Browse delicious meals from around the world!
         </p>
+
         <MealList />
       </div>
     </div>
