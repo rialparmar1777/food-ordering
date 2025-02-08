@@ -12,35 +12,28 @@ export default function Cart() {
 
   // Update total price and tax whenever cart changes
   useEffect(() => {
-    // Calculate total price before tax
     const totalPriceBeforeTax = cart.reduce(
       (total, meal) => total + (meal.price || 0) * (meal.quantity || 1),
       0
     );
 
-    // Calculate tax (13% HST in Ontario)
     const calculatedTax = (totalPriceBeforeTax * 0.13).toFixed(2);
 
-    // Update state values
     setTotalPrice((totalPriceBeforeTax + parseFloat(calculatedTax)).toFixed(2));
     setTaxAmount(calculatedTax);
-  }, [cart]); // Recalculate whenever cart changes
+  }, [cart]);
 
   return (
     <div>
-      {/* Navbar included on Cart Page */}
       <Navbar />
 
-      {/* Cart Container */}
       <div className="p-6">
         <h2 className="text-3xl font-bold text-center mb-6">🛒 Your Cart</h2>
 
-        {/* Empty Cart Message */}
         {cart.length === 0 ? (
           <p className="text-center text-gray-500">Your cart is empty.</p>
         ) : (
           <div>
-            {/* Cart Items */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {cart.map((meal) => (
                 <div
@@ -48,13 +41,12 @@ export default function Cart() {
                   className="bg-[#2c2c2c] text-white shadow-md p-4 rounded-lg text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:bg-[#3a3a3a]"
                 >
                   <img
-                    src={meal.strMealThumb}
+                    src={meal.strMealThumb || meal.image} // Ensure the image URL is used correctly
                     alt={meal.strMeal}
                     className="w-full h-40 object-cover rounded mb-4"
                   />
                   <h3 className="text-xl font-semibold">{meal.strMeal}</h3>
                   <div className="flex justify-center items-center gap-4 mt-4">
-                    {/* Quantity Adjustment */}
                     <button
                       className="bg-[#FF8C00] text-black px-2 py-1 rounded-full"
                       onClick={() =>
@@ -76,7 +68,7 @@ export default function Cart() {
                   </div>
                   <p className="text-gray-600 mt-2">
                     Price: ${(meal.price || 5.99) * (meal.quantity || 1)}
-                  </p> {/* Updated price based on quantity */}
+                  </p>
                   <button
                     className="mt-3 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
                     onClick={() => removeFromCart(meal.idMeal)}
@@ -87,7 +79,6 @@ export default function Cart() {
               ))}
             </div>
 
-            {/* Total Price, Tax and Checkout */}
             <div className="text-center mt-6">
               <h3 className="text-2xl font-bold">Total: ${totalPrice}</h3>
               <p className="text-lg text-gray-500">Tax (13% HST): ${taxAmount}</p>
