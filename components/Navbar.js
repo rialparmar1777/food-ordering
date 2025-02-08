@@ -27,6 +27,7 @@ export default function Navbar() {
               >
                 {item}
               </Link>
+              
               <div className="absolute bottom-0 left-0 w-full h-1 bg-[#ffffff] scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
             </li>
           ))}
