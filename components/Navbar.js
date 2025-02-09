@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/lib/CartContext";
 import Link from "next/link";
 import { ShoppingCart, Menu, X } from "lucide-react";
@@ -8,71 +8,96 @@ import { ShoppingCart, Menu, X } from "lucide-react";
 export default function Navbar() {
   const { cart } = useCart();
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Scroll effect for navbar background
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <nav className="bg-[#717173] text-[#4b524e] p-4 shadow-lg sticky top-0 z-20">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        isScrolled ? "bg-gray-900/80 backdrop-blur-md shadow-lg" : "bg-transparent"
+      }`}
+    >
+      <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
-        <h1 className="text-3xl font-bold text-[#000000] uppercase tracking-wider transform transition duration-500 hover:text-[#ffffff] hover:scale-105 cursor-pointer">
-          🍽️ Food_Order
+        <h1 className="text-3xl font-bold tracking-wide text-white uppercase cursor-pointer transition-all duration-300 hover:text-orange-500">
+          🍽️ FoodOrder
         </h1>
 
-        {/* Menu for larger screens */}
-        <ul className="hidden md:flex space-x-8 text-lg font-semibold transition-all duration-300">
+        {/* Desktop Menu */}
+        <ul className="hidden md:flex space-x-8 text-lg font-semibold">
           {["Home", "Menu", "About", "Contact"].map((item) => (
             <li key={item} className="relative group">
               <Link
                 href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                className="text-[#000000] hover:text-[#ffffff] transition-all duration-300"
+                className="text-white transition-all duration-300 hover:text-orange-500"
               >
                 {item}
               </Link>
-              
-              <div className="absolute bottom-0 left-0 w-full h-1 bg-[#ffffff] scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
             </li>
           ))}
+          <li>
+            <Link href="/login" className="text-white hover:text-orange-500 transition-all duration-300">
+              Login
+            </Link>
+          </li>
+          <li>
+            <Link href="/register" className="text-white hover:text-orange-500 transition-all duration-300">
+              Register
+            </Link>
+          </li>
         </ul>
 
-        {/* Right-side Cart & Mobile Menu Toggle */}
+        {/* Right-side Icons */}
         <div className="flex items-center space-x-6">
           {/* Cart Icon */}
-          <Link href="/cart" className="relative group font-mono">
-            <ShoppingCart size={28} className="transform transition duration-300 hover:scale-110 text-[#e17564]" />
+          <Link href="/cart" className="relative group">
+            <ShoppingCart size={28} className="text-orange-500 transition-transform duration-300 hover:scale-110" />
             {cart.length > 0 && (
-              <span className="absolute top-0 right-0 bg-[#872341] text-white rounded-full text-xs px-2">
+              <span className="absolute top-0 right-0 bg-red-600 text-white rounded-full text-xs px-2">
                 {cart.length}
               </span>
             )}
-            <div className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-white opacity-70 group-hover:opacity-100 transition duration-200"></div>
           </Link>
 
-          {/* Mobile Menu Toggle Button */}
-          <button
-            className="md:hidden focus:outline-none transform transition duration-300 hover:scale-110"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X size={28} className="text-[#e17564]" /> : <Menu size={28} className="text-[#e17564]" />}
+          {/* Mobile Menu Toggle */}
+          <button className="md:hidden focus:outline-none" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <X size={28} className="text-orange-500" /> : <Menu size={28} className="text-orange-500" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isOpen && (
-        <ul className="md:hidden flex flex-col items-center bg-[#872341] text-white py-4 space-y-4 animate__animated animate__fadeIn">
-          {["Home", "Menu", "About", "Contact"].map((item) => (
-            <li key={item} className="relative group">
+      {/* Mobile Menu - Slide-in Effect */}
+      <div
+        className={`fixed top-0 right-0 h-full w-3/4 bg-gray-900 text-white shadow-lg transform transition-transform ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <button className="absolute top-5 right-5 text-orange-500" onClick={() => setIsOpen(false)}>
+          <X size={28} />
+        </button>
+        <ul className="flex flex-col items-center justify-center space-y-6 h-full text-lg">
+          {["Home", "Menu", "About", "Contact", "Login", "Register"].map((item) => (
+            <li key={item}>
               <Link
                 href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                className="text-white hover:text-[#e17564] transition duration-300"
+                className="text-white hover:text-orange-500 transition-all duration-300"
                 onClick={() => setIsOpen(false)}
               >
                 {item}
               </Link>
-              <div className="absolute bottom-0 left-0 w-full h-1 bg-[#e17564] scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
             </li>
           ))}
         </ul>
-      )}
+      </div>
     </nav>
   );
 }
