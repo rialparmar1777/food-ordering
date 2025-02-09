@@ -11,8 +11,8 @@ import { FaShoppingCart } from "react-icons/fa";
 
 export default function Menu() {
   const [meals, setMeals] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [query, setQuery] = useState("chicken");
+  const [searchQuery, setSearchQuery] = useState("chicken");
+  const [query, setQuery] = useState(searchQuery);  
   const [loading, setLoading] = useState(false);
   const { addToCart } = useCart();
 
