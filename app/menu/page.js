@@ -1,140 +1,109 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSpring, animated } from "@react-spring/web";
+import { useState, useEffect } from "react";
+import { useCart } from "@/lib/CartContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Carousel from "@/components/Carousel";
 import Image from "next/image";
-import { fetchRandomMeals } from "@/lib/api";
-import { useCart } from "@/lib/CartContext";
+import { Loader, Search } from "lucide-react";
+import { useSpring, animated } from "@react-spring/web";
+import { FaShoppingCart } from "react-icons/fa";
 
 export default function Menu() {
-  const [featuredMeals, setFeaturedMeals] = useState([]);
-  const [offers, setOffers] = useState([]);
-  const [menuCategories, setMenuCategories] = useState([]);
-  const { cart, addToCart } = useCart(); // Use the useCart hook to get cart state
+  const [meals, setMeals] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [query, setQuery] = useState("chicken");
+  const [loading, setLoading] = useState(false);
+  const { addToCart } = useCart();
 
   useEffect(() => {
-    async function loadData() {
-      const meals = await fetchRandomMeals(5);
-      setFeaturedMeals(meals);
-
-      setOffers([
-        { name: "Big Mac Combo", price: "6.99", image: "/bigmac.jpg" },
-        { name: "Cheesy Pizza", price: "8.99", image: "/cheesypizza.jpg" },
-        { name: "Chicken Wrap", price: "5.49", image: "/chickenwrap.jpg" },
-      ]);
-
-      setMenuCategories([
-        { name: "Burgers", image: "/burger.jpg" },
-        { name: "Pasta", image: "/pasta.jpg" },
-        { name: "Desserts", image: "/dessert.jpg" },
-        { name: "Drinks", image: "/drinks.jpg" },
-      ]);
-    }
-    loadData();
-  }, []);
-
-  const fadeIn = useSpring({
-    opacity: 1,
-    from: { opacity: 0 },
-    config: { tension: 280, friction: 60 },
-  });
-
-  const handleAddToCart = (item) => {
-    addToCart(item);
-  };
+    setLoading(true);
+    fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setMeals(data.meals || []);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching meals:", error);
+        setLoading(false);
+      });
+  }, [query]);
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <Navbar cartItemCount={cart.length} /> {/* Use cart from useCart */}
-
-      <section className="w-full py-6 bg-gradient-to-r from-orange-500 to-red-500 text-white">
-        <h2 className="text-center text-4xl font-bold mb-4">🍽️ Explore Our Menu</h2>
-        <Carousel />
+    <div className="bg-[#09122c] text-white min-h-screen">
+      <Navbar />
+      <section className="py-8 text-center">
+        <h2 className="text-4xl font-bold">🍽️ Explore Our Meals</h2>
       </section>
 
-      <animated.section className="p-6 bg-orange-600 text-white text-center" style={fadeIn}>
-        <h2 className="text-3xl font-bold mb-4">🔥 Today's Offers</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {offers.map((offer, index) => (
-            <animated.div
-              key={index}
-              className="bg-orange-500 p-4 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300"
-              style={fadeIn}
-            >
-              <Image
-                src={offer.image}
-                alt={offer.name}
-                width={200}
-                height={200}
-                className="mx-auto rounded-md"
-              />
-              <h3 className="text-xl font-bold mt-2">{offer.name}</h3>
-              <p className="text-lg font-semibold mt-2">Now: ${offer.price}</p>
-              <button
-                onClick={() => handleAddToCart(offer)}
-                className="mt-4 bg-orange-400 text-black px-4 py-2 rounded-lg hover:bg-orange-300 transition"
-              >
-                Add to Cart
-              </button>
-            </animated.div>
-          ))}
+      {/* Search Bar */}
+      <div className="flex justify-center mb-6">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search for a meal..."
+            className="p-2 pl-10 bg-[#333333] border border-[#444444] rounded-md shadow-md text-white focus:ring-2 focus:ring-[#FF8C00] transition"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
         </div>
-      </animated.section>
+        <button
+          className="ml-2 bg-[#FF8C00] text-black px-4 py-2 rounded-md font-bold hover:bg-[#FF6A00] transition"
+          onClick={() => setQuery(searchQuery)}
+        >
+          Search
+        </button>
+      </div>
 
-      <animated.section className="p-6" style={fadeIn}>
-        <h2 className="text-3xl font-bold text-center mb-6">🍽️ Featured Meals</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-          {featuredMeals.map((meal, index) => (
-            <animated.div
-              key={index}
-              className="bg-gray-800 p-4 rounded-lg text-white text-center hover:scale-105 transition-transform"
-              style={fadeIn}
-            >
-              <Image
-                src={meal.image}
-                alt={meal.name}
-                width={150}
-                height={150}
-                className="mx-auto rounded-md"
-              />
-              <h3 className="text-lg font-bold mt-2">{meal.name}</h3>
-              <p className="text-lg mt-2">{meal.description}</p>
-              <button
-                onClick={() => handleAddToCart(meal)}
-                className="mt-4 bg-orange-400 text-black px-4 py-2 rounded-lg hover:bg-orange-300 transition"
-              >
-                Add to Cart
-              </button>
-            </animated.div>
-          ))}
+      {/* Loading State */}
+      {loading ? (
+        <div className="flex justify-center items-center">
+          <Loader className="animate-spin text-[#FF8C00]" size={32} />
         </div>
-      </animated.section>
-
-      <animated.section className="p-6" style={fadeIn}>
-        <h2 className="text-3xl font-bold text-center mb-6">🍽️ Our Menu</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {menuCategories.map((category, index) => (
-            <animated.div
-              key={index}
-              className="bg-gray-800 p-4 rounded-lg text-white text-center hover:scale-105 transition-transform"
-              style={fadeIn}
-            >
-              <Image
-                src={category.image}
-                alt={category.name}
-                width={150}
-                height={150}
-                className="mx-auto rounded-md"
-              />
-              <h3 className="text-lg font-bold mt-2">{category.name}</h3>
-            </animated.div>
-          ))}
-        </div>
-      </animated.section>
-
+      ) : (
+        <animated.section className="p-6">
+          <h2 className="text-3xl font-bold text-center mb-6">🔥 Featured Meals</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {meals.length === 0 ? (
+              <p className="text-center text-gray-400 col-span-full">
+                No meals found. Try another search!
+              </p>
+            ) : (
+              meals.map((meal) => (
+                <div
+                  key={meal.idMeal}
+                  className="bg-[#872341] p-4 rounded-lg text-center transform transition hover:scale-105 hover:bg-[#3a3a3a]"
+                >
+                  <Image
+                    src={meal.strMealThumb}
+                    alt={meal.strMeal}
+                    width={200}
+                    height={200}
+                    className="mx-auto rounded-md"
+                  />
+                  <h3 className="text-xl font-semibold mt-2 text-[#FF8C00]">{meal.strMeal}</h3>
+                  <div className="flex flex-col gap-2 mt-3">
+                    <button
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-400 transition"
+                      onClick={() => window.location.href = `/meal/${meal.idMeal}`}
+                    >
+                      View Recipe
+                    </button>
+                    <button
+                      className="bg-yellow-500 text-black px-4 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-yellow-400 transition"
+                      onClick={() => addToCart(meal)}
+                    >
+                      <FaShoppingCart /> Add to Cart
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </animated.section>
+      )}
       <Footer />
     </div>
   );
