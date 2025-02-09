@@ -2,20 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/CartContext";
-import Navbar from "@/components/Navbar";
+import { ShoppingCart, Menu, X } from "lucide-react"; // Import X here
+import Navbar from "@/components/Navbar"; // You can use the same Navbar component if you want
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import { Loader, Search } from "lucide-react";
-import { useSpring, animated } from "@react-spring/web";
-import { FaShoppingCart } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { FaShoppingCart } from "react-icons/fa";
+import Link from "next/link"; // Add Link for navigation
 
-export default function Menu() {
+export default function FoodMenu() { // Rename to FoodMenu
   const [meals, setMeals] = useState([]);
   const [searchQuery, setSearchQuery] = useState("chicken");
   const [query, setQuery] = useState(searchQuery);  
   const [loading, setLoading] = useState(false);
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
 
   useEffect(() => {
     setLoading(true);
@@ -31,12 +32,106 @@ export default function Menu() {
       });
   }, [query]);
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <div className="bg-gradient-to-r from-blue-900 to-blue-600 text-white min-h-screen">
-      <Navbar />
-      <section className="py-8 text-center">
-        <h2 className="text-5xl font-extrabold">🍽️ Explore Our Meals</h2>
-      </section>
+      {/* Navbar */}
+      <nav
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? "bg-gray-900/80 backdrop-blur-md shadow-lg" : "bg-transparent"}`}
+      >
+        <div className="container mx-auto flex justify-between items-center p-4">
+          {/* Logo */}
+          <h1 className="text-3xl font-bold tracking-wide text-black uppercase cursor-pointer transition-all duration-300 hover:text-orange-500">
+            🍽️ FoodOrder
+          </h1>
+
+          {/* Desktop Menu */}
+          <ul className="hidden md:flex space-x-8 text-lg font-semibold">
+            {["Home", "Menu", "About", "Contact"].map((item) => (
+              <li key={item} className="relative group">
+                <Link
+                  href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+                  className="text-black transition-all duration-300 hover:text-orange-500"
+                >
+                  {item}
+                </Link>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+              </li>
+            ))}
+            <li>
+              <Link href="/login" className="text-black hover:text-orange-500 transition-all duration-300">
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link href="/register" className="text-black hover:text-orange-500 transition-all duration-300">
+                Register
+              </Link>
+            </li>
+          </ul>
+
+          {/* Right-side Icons */}
+          <div className="flex items-center space-x-6">
+            {/* Cart Icon */}
+            <Link href="/cart" className="relative group">
+              <FaShoppingCart size={28} className="text-black transition-transform duration-300 hover:scale-110" />
+              {cart.length > 0 && (
+                <span className="absolute top-0 right-0 bg-red-600 text-white rounded-full text-xs px-2">
+                  {cart.length}
+                </span>
+              )}
+            </Link>
+
+            {/* Mobile Menu Toggle */}
+            <button className="md:hidden focus:outline-none" onClick={() => setIsOpen(!isOpen)}>
+              {isOpen ? (
+                <X size={28} className="text-orange-500" />
+              ) : (
+                <Menu size={28} className="text-orange-500" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu - Slide-in Effect */}
+        <div
+          className={`fixed top-0 right-0 h-full w-3/4 bg-gray-900 text-white shadow-lg transform transition-transform ${
+            isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <button className="absolute top-5 right-5 text-orange-500" onClick={() => setIsOpen(false)}>
+            <X size={28} />
+          </button>
+          <ul className="flex flex-col items-center justify-center space-y-6 h-full text-lg">
+            {["Home", "Menu", "About", "Contact", "Login", "Register"].map((item) => (
+              <li key={item}>
+                <Link
+                  href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+                  className="text-white hover:text-orange-500 transition-all duration-300"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+
+      {/* Menu Content */}
+      <section className="mt-16 py-8 text-center">
+  <h2 className="text-5xl font-extrabold">🍽️ Explore Our Meals</h2>
+</section>
 
       <div className="flex justify-center mb-6">
         <div className="relative">
@@ -63,7 +158,7 @@ export default function Menu() {
           <Loader className="animate-spin text-orange-500" size={40} />
         </div>
       ) : (
-        <animated.section className="p-8">
+        <motion.section className="p-8">
           <h2 className="text-4xl font-bold text-center mb-8">🔥 Featured Meals</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {meals.length === 0 ? (
@@ -104,7 +199,7 @@ export default function Menu() {
               ))
             )}
           </div>
-        </animated.section>
+        </motion.section>
       )}
       <Footer />
     </div>

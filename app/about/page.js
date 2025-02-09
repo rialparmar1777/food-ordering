@@ -1,29 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { useCart } from "@/lib/CartContext";
 import { ShoppingCart, Menu, X } from "lucide-react";
+import { useCart } from "@/lib/CartContext";
 
-// Images for Carousel
-const images = [
-  { src: "/carousel1.jpg", caption: "Fresh Salads 🥗" },
-  { src: "/carousel2.jpg", caption: "Tasty Burgers 🍔" },
-  { src: "/carousel3.jpg", caption: "Delicious Pizza 🍕" },
-];
-
-export default function HeroSection() {
+export default function About() {
   const { cart } = useCart();
-  const [index, setIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % images.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,7 +18,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <div className="relative w-full h-screen">
+    <div className="relative bg-gradient-to-r from-blue-800 via-purple-700 to-blue-800">
       {/* Navbar */}
       <nav
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
@@ -43,7 +27,7 @@ export default function HeroSection() {
       >
         <div className="container mx-auto flex justify-between items-center p-4">
           {/* Logo */}
-          <h1 className="text-3xl font-bold tracking-wide text-black uppercase cursor-pointer transition-all duration-300 hover:text-orange-500">
+          <h1 className="text-3xl font-bold tracking-wide text-white uppercase cursor-pointer transition-all duration-300 hover:text-orange-500">
             🍽️ FoodOrder
           </h1>
 
@@ -53,23 +37,20 @@ export default function HeroSection() {
               <li key={item} className="relative group">
                 <Link
                   href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                  className="text-black transition-all duration-300 hover:text-orange-500"
+                  className="text-white transition-all duration-300 hover:text-orange-500"
                 >
                   {item}
                 </Link>
-                
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
               </li>
-              
-              
             ))}
             <li>
-              <Link href="/login" className="text-black hover:text-orange-500 transition-all duration-300">
+              <Link href="/login" className="text-white hover:text-orange-500 transition-all duration-300">
                 Login
               </Link>
             </li>
             <li>
-              <Link href="/register" className="black hover:text-orange-500 transition-all duration-300">
+              <Link href="/register" className="text-white hover:text-orange-500 transition-all duration-300">
                 Register
               </Link>
             </li>
@@ -79,7 +60,7 @@ export default function HeroSection() {
           <div className="flex items-center space-x-6">
             {/* Cart Icon */}
             <Link href="/cart" className="relative group">
-              <ShoppingCart size={28} className="text-black transition-transform duration-300 hover:scale-110" />
+              <ShoppingCart size={28} className="text-white transition-transform duration-300 hover:scale-110" />
               {cart.length > 0 && (
                 <span className="absolute top-0 right-0 bg-red-600 text-white rounded-full text-xs px-2">
                   {cart.length}
@@ -119,57 +100,36 @@ export default function HeroSection() {
         </div>
       </nav>
 
-      {/* Carousel */}
-      <div className="relative w-full h-screen overflow-hidden">
-        {images.map((image, i) => (
-          <div
-            key={i}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out transform ${
-              i === index ? "opacity-100 scale-100" : "opacity-0 scale-95"
-            }`}
-          >
-            <Image
-              src={image.src}
-              alt={image.caption}
-              layout="fill"
-              objectFit="cover"
-              priority={i === 0}
-              className="rounded-lg shadow-lg"
-            />
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow-md">
-              {image.caption}
-            </div>
+      {/* About Us Content */}
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-purple-600 to-blue-800 py-16 px-6">
+        <h1 className="text-5xl font-extrabold text-white mb-8 text-center">
+          About Us
+        </h1>
+        <p className="text-lg text-white mb-6 max-w-3xl text-center">
+          Welcome to FoodOrder! We are passionate about serving you delicious and fresh food, whether you're in the mood for
+          salads, burgers, or pizza. Our mission is to provide a seamless food ordering experience, bringing your favorite
+          meals right to your door.
+        </p>
+        <div className="flex flex-col items-center gap-6 mb-12">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-lg">
+            <h3 className="text-2xl font-bold text-orange-500 mb-4">Our Mission</h3>
+            <p className="text-lg text-gray-700">
+              Our team is dedicated to ensuring that you always get the highest quality food made with the best ingredients.
+              We are constantly updating our menu with new and exciting options to keep you coming back for more!
+            </p>
           </div>
-        ))}
-
-        {/* Navigation Arrows */}
-        <button
-          onClick={() => setIndex((index - 1 + images.length) % images.length)}
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white bg-black bg-opacity-50 p-3 rounded-full hover:bg-opacity-75 transition-all"
-          aria-label="Previous Slide"
-        >
-          &#10094;
-        </button>
-        <button
-          onClick={() => setIndex((index + 1) % images.length)}
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white bg-black bg-opacity-50 p-3 rounded-full hover:bg-opacity-75 transition-all"
-          aria-label="Next Slide"
-        >
-          &#10095;
-        </button>
-
-        {/* Dots Navigation */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {images.map((_, i) => (
-            <button
-              key={i}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                i === index ? "bg-yellow-500 scale-125" : "bg-gray-300"
-              } hover:scale-125`}
-              onClick={() => setIndex(i)}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-lg">
+            <h3 className="text-2xl font-bold text-orange-500 mb-4">Join Us</h3>
+            <p className="text-lg text-gray-700 mb-4">
+              Become a part of our food community! Whether you're a passionate chef or a foodie, we welcome you to join
+              the FoodOrder family and help us bring joy to others through delicious meals.
+            </p>
+            <Link href="/contact">
+              <button className="bg-orange-500 text-white py-2 px-6 rounded-full hover:bg-orange-400 transition">
+                Get in Touch
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
