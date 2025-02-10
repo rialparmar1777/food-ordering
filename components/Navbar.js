@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/lib/CartContext";
 import { ShoppingCart, Menu, X } from "lucide-react";
+import { motion } from "framer-motion";
 
 // Images for Carousel
 const images = [
@@ -49,9 +50,15 @@ export default function HeroSection() {
             🍽️ FoodOrder
           </h1>
           {/* Desktop Menu */}
-          <ul className="hidden md:flex space-x-8 text-lg font-semibold">
-            {["Home", "Menu", "About", "Contact"].map((item) => (
-              <li key={item} className="relative group">
+          <motion.ul className="hidden md:flex space-x-8 text-lg font-semibold">
+            {["Home", "Menu", "About", "Contact"].map((item, index) => (
+              <motion.li
+                key={item}
+                className="relative group"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.2, duration: 0.5 }}
+              >
                 <Link
                   href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
                   className="text-black transition-all duration-300 hover:text-orange-500"
@@ -59,7 +66,7 @@ export default function HeroSection() {
                   {item}
                 </Link>
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
-              </li>
+              </motion.li>
             ))}
             <li>
               <Link
@@ -77,7 +84,7 @@ export default function HeroSection() {
                 Register
               </Link>
             </li>
-          </ul>
+          </motion.ul>
 
           {/* Right-side Icons */}
           <div className="flex items-center space-x-6">
@@ -122,8 +129,13 @@ export default function HeroSection() {
           </button>
           <ul className="flex flex-col items-center justify-center space-y-6 h-full text-lg">
             {["Home", "Menu", "About", "Contact", "Login", "Register"].map(
-              (item) => (
-                <li key={item}>
+              (item, index) => (
+                <motion.li
+                  key={item}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.2, duration: 0.5 }}
+                >
                   <Link
                     href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
                     className="text-white hover:text-orange-500 transition-all duration-300"
@@ -131,7 +143,7 @@ export default function HeroSection() {
                   >
                     {item}
                   </Link>
-                </li>
+                </motion.li>
               )
             )}
           </ul>
