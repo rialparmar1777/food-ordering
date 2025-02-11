@@ -5,14 +5,16 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export async function POST(req) {
   try {
     const { cart } = await req.json();
-    
-    // Transform cart data into Stripe's format
+    if (!cart || cart.length === 0) {
+      return Response.json({ error: "Cart is empty" }, { status: 400 });
+    }
+
     const lineItems = cart.map((item) => ({
       price_data: {
         currency: "usd",
         product_data: {
           name: item.strMeal,
-          images: [item.strMealThumb],
+          images: item.strMealThumb ? [item.strMealThumb] : [],
         },
         unit_amount: Math.round((item.price || 5.99) * 100), // Convert to cents
       },
