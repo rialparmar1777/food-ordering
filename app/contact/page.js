@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/lib/CartContext";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function Contact() {
   const { cart } = useCart();
@@ -99,61 +100,106 @@ export default function Contact() {
         </div>
       </nav>
 
-      {/* Contact Content */}
-      <div className="min-h-screen bg-gradient-to-r from-orange-100 via-white to-orange-100 py-12 px-4 sm:px-6 lg:px-8">
-        <h1 className="mt-16 py-8 text-center text-4xl font-extrabold text-black mb-6">
-          Get in Touch with Us
-        </h1>
-        <p className="text-lg text-gray-700 text-center mb-12">
-          Have questions, suggestions, or just want to say hi? We would love to hear from you! Fill out the form below to get started.
+      {/* Hero Section */}
+      <motion.div
+        className="relative bg-gradient-to-r from-orange-400 via-yellow-300 to-orange-600 h-screen flex flex-col justify-center items-center text-center text-white px-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        <h1 className="text-5xl font-bold mb-4">We'd Love to Hear From You!</h1>
+        <p className="text-xl mb-6 max-w-xl mx-auto">
+          Whether you have questions, feedback, or just want to connect, fill out the form below to get in touch with us!
         </p>
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Link href="#contact-form">
+            <button className="px-8 py-3 bg-orange-500 text-white font-semibold rounded-lg shadow-md hover:bg-orange-400 transition duration-300">
+              Get in Touch
+            </button>
+          </Link>
+        </motion.div>
+      </motion.div>
 
-        {/* Contact Form */}
-        <div className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-xl ring-2 ring-gray-200">
+      {/* Contact Content */}
+      <div id="contact-form" className="min-h-screen bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto bg-white p-10 rounded-lg shadow-xl ring-2 ring-gray-200">
+          <h2 className="text-3xl font-semibold text-center text-gray-900 mb-10">Send Us a Message</h2>
+
+          {/* Form */}
           <form action="#" method="POST">
-            <div className="mb-6">
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Full Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                required
-                className="mt-1 p-4 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500"
-              />
+            <div className="grid grid-cols-1 gap-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  required
+                  className="mt-1 p-4 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  required
+                  className="mt-1 p-4 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700">
+                  Your Message
+                </label>
+                <textarea
+                  name="message"
+                  id="message"
+                  rows="6"
+                  required
+                  className="mt-1 p-4 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500"
+                />
+              </div>
             </div>
-            <div className="mb-6">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email Address
-              </label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                required
-                className="mt-1 p-4 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-            <div className="mb-6">
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                Your Message
-              </label>
-              <textarea
-                name="message"
-                id="message"
-                rows="6"
-                required
-                className="mt-1 p-4 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-            <button
+
+            <motion.button
               type="submit"
-              className="w-full py-4 px-6 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full py-4 px-6 mt-8 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              whileHover={{ scale: 1.05 }}
             >
               Send Message
-            </button>
+            </motion.button>
           </form>
+        </div>
+      </div>
+
+      {/* Contact Info Section */}
+      <div className="bg-gray-900 text-white py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl font-semibold mb-6">Other Ways to Reach Us</h2>
+          <div className="flex justify-center space-x-8">
+            <div className="flex flex-col items-center">
+              <div className="text-4xl mb-4">
+                <span className="material-icons">phone_in_talk</span>
+              </div>
+              <p className="text-xl">Call Us: +1 234 567 890</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="text-4xl mb-4">
+                <span className="material-icons">email</span>
+              </div>
+              <p className="text-xl">Email Us: rialparmar007@gmail.com</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
