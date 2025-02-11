@@ -1,78 +1,76 @@
+import Aurora from './Aurora'; // Import the Aurora component
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaLinkedinIn } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="relative bg-black text-white py-16">
-      {/* Footer Main Content */}
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col items-center sm:flex-row sm:justify-between sm:space-x-16">
+    <footer className="relative bg-black text-white py-12">
+      {/* Aurora Background Effect */}
+      <div className="absolute inset-0 z-0">
+        <Aurora colorStops={["#0a0a0a", "#2d2d2d", "#3b3b3b"]} speed={0.3} />
+      </div>
 
+      {/* Background Overlay */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1565126135-fdd409d9b4a7?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjQ2OXwwfDF8c2VhY2h8NXx8Zm9vZCUyMGltYWdlfGVufDB8fHx8fDE2MjA1MjA5NzE&ixlib=rb-1.2.1&q=80&w=400')",
+        }}
+      ></div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+        {/* Footer Links */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 text-center sm:text-left">
           {/* Column 1 */}
-          <div className="mb-8 sm:mb-0">
-            <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-500 mb-4">
-              FoodOrder
-            </h2>
-            <p className="text-lg text-gray-400">
-              A place where food lovers gather! Serving you with delicious meals, anytime.
-            </p>
+          <div>
+            <h4 className="text-xl font-semibold text-red-500">Company</h4>
+            <ul className="mt-3 space-y-2">
+              <li className="hover:text-red-500 cursor-pointer">About Us</li>
+              <li className="hover:text-red-500 cursor-pointer">Careers</li>
+              <li className="hover:text-red-500 cursor-pointer">Press</li>
+              <li className="hover:text-red-500 cursor-pointer">Privacy Policy</li>
+            </ul>
           </div>
 
           {/* Column 2 */}
-          <div className="mb-8 sm:mb-0">
-            <h4 className="text-xl font-semibold text-white mb-6">Quick Links</h4>
-            <ul className="space-y-4">
-              <li className="cursor-pointer text-gray-400 hover:text-orange-500 transition-all duration-300">About Us</li>
-              <li className="cursor-pointer text-gray-400 hover:text-orange-500 transition-all duration-300">Menu</li>
-              <li className="cursor-pointer text-gray-400 hover:text-orange-500 transition-all duration-300">Contact</li>
-              <li className="cursor-pointer text-gray-400 hover:text-orange-500 transition-all duration-300">Careers</li>
+          <div>
+            <h4 className="text-xl font-semibold text-red-500">Customer Support</h4>
+            <ul className="mt-3 space-y-2">
+              <li className="hover:text-red-500 cursor-pointer">FAQs</li>
+              <li className="hover:text-red-500 cursor-pointer">Contact Support</li>
+              <li className="hover:text-red-500 cursor-pointer">Track Order</li>
+              <li className="hover:text-red-500 cursor-pointer">Terms of Service</li>
             </ul>
           </div>
 
           {/* Column 3 */}
-          <div className="mb-8 sm:mb-0">
-            <h4 className="text-xl font-semibold text-white mb-6">Get in Touch</h4>
-            <p className="text-lg text-gray-400 mb-6">Have any questions? Reach us below:</p>
-            <form className="flex flex-col space-y-4">
-              <input
-                type="text"
-                placeholder="Your Name"
-                className="p-3 rounded-md bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-              <input
-                type="email"
-                placeholder="Your Email"
-                className="p-3 rounded-md bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-              <textarea
-                placeholder="Your Message"
-                className="p-3 rounded-md bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                rows="4"
-              />
-              <button className="py-3 px-6 rounded-md bg-orange-500 text-white hover:bg-orange-600 transition-all duration-300">
-                Send Message
-              </button>
-            </form>
+          <div>
+            <h4 className="text-xl font-semibold text-red-500">Explore</h4>
+            <ul className="mt-3 space-y-2">
+              <li className="hover:text-red-500 cursor-pointer">Menu</li>
+              <li className="hover:text-red-500 cursor-pointer">Special Offers</li>
+              <li className="hover:text-red-500 cursor-pointer">Gift Cards</li>
+              <li className="hover:text-red-500 cursor-pointer">Rewards Program</li>
+            </ul>
           </div>
-
         </div>
 
         {/* Social Media Section */}
-        <div className="mt-16 text-center">
-          <h4 className="text-xl font-semibold text-white mb-6">Follow Us</h4>
-          <div className="flex justify-center gap-6 text-2xl">
-            <FaFacebookF className="cursor-pointer text-white hover:text-orange-500 transition-all duration-300" />
-            <FaTwitter className="cursor-pointer text-white hover:text-orange-500 transition-all duration-300" />
-            <FaInstagram className="cursor-pointer text-white hover:text-orange-500 transition-all duration-300" />
-            <FaYoutube className="cursor-pointer text-white hover:text-orange-500 transition-all duration-300" />
-            <FaLinkedinIn className="cursor-pointer text-white hover:text-orange-500 transition-all duration-300" />
+        <div className="mt-12 text-center">
+          <h4 className="text-xl font-semibold text-red-500">Follow Us</h4>
+          <div className="flex justify-center gap-6 mt-4">
+            <FaFacebookF className="text-2xl cursor-pointer hover:text-red-500 transform transition-all hover:scale-110" />
+            <FaTwitter className="text-2xl cursor-pointer hover:text-red-500 transform transition-all hover:scale-110" />
+            <FaInstagram className="text-2xl cursor-pointer hover:text-red-500 transform transition-all hover:scale-110" />
+            <FaYoutube className="text-2xl cursor-pointer hover:text-red-500 transform transition-all hover:scale-110" />
+            <FaLinkedinIn className="text-2xl cursor-pointer hover:text-red-500 transform transition-all hover:scale-110" />
           </div>
         </div>
-      </div>
 
-      {/* Footer Bottom */}
-      <div className="bg-gray-900 py-6">
-        <div className="container mx-auto text-center">
+        {/* Footer Bottom */}
+        <div className="mt-12 text-center border-t border-gray-700 pt-6">
           <p>&copy; {new Date().getFullYear()} FoodOrder. All rights reserved.</p>
+          <p className="text-gray-400">Powered by <span className="text-yellow-200">Rial</span> </p>
         </div>
       </div>
     </footer>
