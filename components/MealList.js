@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/lib/CartContext";
 import Link from "next/link";
 import { Loader, Search } from "lucide-react";
-import { useSpring, animated } from "@react-spring/web";
 import { motion } from "framer-motion";
 
 export default function MealList() {
@@ -13,7 +12,6 @@ export default function MealList() {
   const [query, setQuery] = useState("chicken");
   const [loading, setLoading] = useState(false);
   const { addToCart } = useCart();
-  const [flyingImage, setFlyingImage] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -29,46 +27,11 @@ export default function MealList() {
       });
   }, [query]);
 
-  // Flying Image Animation with @react-spring
-  const flyingAnimation = useSpring({
-    to: {
-      opacity: flyingImage ? 0 : 1,
-      transform: flyingImage
-        ? "translate(200px, -100px) scale(0.5)" // Adjust the end position (towards cart)
-        : "translate(0, 0) scale(1)",
-    },
-    config: { tension: 170, friction: 26 },
-  });
-
-  // Handle adding item to cart and animating image
-  const handleAddToCart = (meal, imageElement) => {
-    if (!imageElement) return;
-
-    // Get the position of the clicked image
-    const rect = imageElement.getBoundingClientRect();
-    
-    // Set the flying image state with its position
-    setFlyingImage({
-      id: meal.idMeal,
-      src: meal.strMealThumb,
-      startX: rect.left + window.scrollX,
-      startY: rect.top + window.scrollY,
-      width: rect.width,
-      height: rect.height,
-    });
-
-    // Add the meal to the cart after the animation
-    setTimeout(() => {
-      addToCart(meal);
-      setFlyingImage(null);
-    }, 800); // Flying animation duration
-  };
-
   return (
     <div className="p-6 bg-gradient-to-br from-[#09122c] to-[#872341] text-white min-h-screen">
       {/* Title */}
       <motion.h2
-        className="text-5xl font-extrabold text-center mb-6 text-[#FF8C00] drop-shadow-md"
+        className="text-5xl font-extrabold text-center mb-8 text-[#FF8C00] drop-shadow-lg"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -77,7 +40,7 @@ export default function MealList() {
       </motion.h2>
 
       {/* Search Bar */}
-      <div className="flex justify-center mb-6">
+      <div className="flex justify-center mb-8">
         <div className="relative">
           <input
             type="text"
@@ -89,7 +52,7 @@ export default function MealList() {
           <Search className="absolute left-3 top-3 text-gray-400" size={18} />
         </div>
         <button
-          className="ml-2 bg-[#FF8C00] text-black px-4 py-2 rounded-lg font-bold hover:bg-black hover:text-[#FF8C00] transition-all transform hover:translate-x-2"
+          className="ml-2 bg-[#FF8C00] text-black px-4 py-2 rounded-lg font-bold hover:bg-black hover:text-[#FF8C00] transition-all transform hover:scale-105"
           onClick={() => setQuery(searchQuery)}
         >
           Search
@@ -117,53 +80,36 @@ export default function MealList() {
             meals.map((meal) => (
               <motion.div
                 key={meal.idMeal}
-                className="relative bg-[#2c2c2c]/80 backdrop-blur-md shadow-xl p-6 rounded-lg text-center hover:scale-105 hover:shadow-2xl transition-all"
+                className="relative bg-[#ffffff08] backdrop-blur-md border border-[#ffffff1a] shadow-xl p-6 rounded-2xl text-center 
+                hover:shadow-2xl hover:border-[#FF8C00] transition-all transform hover:scale-105"
                 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
               >
-                {/* Floating image animation */}
-                {flyingImage && flyingImage.id === meal.idMeal && (
-                  <motion.img
-                    src={flyingImage.src}
-                    alt="Flying meal"
-                    initial={{
-                      left: flyingImage.startX,
-                      top: flyingImage.startY,
-                      width: flyingImage.width,
-                      height: flyingImage.height,
-                      opacity: 1,
-                    }}
-                    animate={{
-                      left: "90%", // Adjust based on cart location
-                      top: "5%",
-                      width: 50,
-                      height: 50,
-                      opacity: 0.5,
-                    }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="fixed z-50 pointer-events-none"
-                  />
-                )}
-
                 {/* Meal Image */}
-                <animated.img
-                  style={flyingImage === meal.idMeal ? flyingAnimation : {}}
-                  src={meal.strMealThumb}
-                  alt={meal.strMeal}
-                  className="w-full h-40 object-cover rounded-md mb-4 cursor-pointer hover:scale-110 transition-all"
-                  onClick={(e) => handleAddToCart(meal, e.target)}
-                />
+                <div className="relative overflow-hidden rounded-xl">
+                  <motion.img
+                    src={meal.strMealThumb}
+                    alt={meal.strMeal}
+                    className="w-full h-48 object-cover rounded-xl transition-all duration-300 hover:scale-110"
+                  />
+                </div>
 
                 {/* Meal Name */}
-                <h3 className="text-2xl font-semibold text-[#FF8C00] mb-4">
+                <h3 className="text-2xl font-semibold text-[#FF8C00] mt-4">
                   {meal.strMeal}
                 </h3>
 
+                {/* Description */}
+                <p className="text-gray-300 text-sm mt-2">
+                  A delicious {meal.strMeal} recipe for your cravings.
+                </p>
+
                 {/* Buttons */}
-                <div className="flex flex-col gap-3 mt-4">
+                <div className="flex justify-center gap-4 mt-5">
                   {/* View Recipe Button */}
                   <Link href={`/meal/${meal.idMeal}`}>
                     <motion.button
-                      className="px-4 py-2 bg-[#FFFF00] text-black font-bold rounded-lg hover:bg-black hover:text-[#FF8C00] transition-all transform hover:translate-x-2"
+                      className="px-4 py-2 bg-[#FFFF00] text-black font-bold rounded-lg shadow-md hover:bg-black hover:text-[#FF8C00] 
+                      transition-all transform hover:scale-105"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -173,10 +119,11 @@ export default function MealList() {
 
                   {/* Add to Cart Button */}
                   <motion.button
-                    className="px-4 py-2 bg-[#FF8C00] text-black font-bold rounded-lg hover:bg-black hover:text-[#FF8C00] transition-all transform hover:translate-x-2"
+                    className="px-4 py-2 bg-[#FF8C00] text-black font-bold rounded-lg shadow-md hover:bg-black hover:text-[#FF8C00] 
+                    transition-all transform hover:scale-105"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={(e) => handleAddToCart(meal, e.target.previousElementSibling)}
+                    onClick={() => addToCart(meal)}
                   >
                     Add to Cart
                   </motion.button>
