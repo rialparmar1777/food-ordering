@@ -45,7 +45,7 @@ export default function MealList() {
           <input
             type="text"
             placeholder="Search for a meal..."
-            className="p-3 pl-10 bg-[#222] border border-[#444] rounded-lg shadow-lg text-white focus:ring-2 focus:ring-[#FF8C00] transition"
+            className="p-3 pl-10 bg-[#222] border border-[#444] rounded-lg shadow-lg text-black focus:ring-2 focus:ring-[#FF8C00] transition"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
