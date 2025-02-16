@@ -1,6 +1,6 @@
-import User from "../models/User.js";
-import jwt from "jsonwebtoken";
-import asyncHandler from "express-async-handler";
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const asyncHandler = require("express-async-handler");
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -77,4 +77,4 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, loginUser, getUserProfile };
+module.exports = { registerUser, loginUser, getUserProfile };
