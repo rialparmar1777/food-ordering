@@ -1,8 +1,8 @@
+// server.js
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js"; // Adjust according to your folder structure
 import userRoutes from "./routes/userRoutes.js"; // Same here
-import { protect } from "./middleware/authMiddleware.js";
 
 dotenv.config();
 

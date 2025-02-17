@@ -1,14 +1,32 @@
-import express from "express";
-import { protect } from "../middleware/authMiddleware.js";
+// authMiddleware.js
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
-const router = express.Router();
+const protect = async (req, res, next) => {
+  let token;
 
-// Example of a protected route
-router.get("/profile", protect, (req, res) => {
-  res.json({
-    message: "This is a protected route.",
-    user: req.user,
-  });
-});
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+    try {
+      // Extract token from the Authorization header
+      token = req.headers.authorization.split(" ")[1];
+      
+      // Verify token and decode the user id
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      
+      // Find user by id and attach to the request object
+      req.user = await User.findById(decoded.id).select("-password");
+      
+      next(); // Proceed to the route handler
+    } catch (error) {
+      res.status(401);
+      throw new Error("Not authorized, token failed");
+    }
+  }
 
-export default router;
+  if (!token) {
+    res.status(401);
+    throw new Error("Not authorized, no token");
+  }
+};
+
+export { protect };
