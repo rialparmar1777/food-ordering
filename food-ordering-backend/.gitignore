@@ -4,7 +4,7 @@ npm-debug.log
 yarn-error.log
 package-lock.json
 
-# Environment variables
+# .env file should be ignored
 .env
 
 # Logs
