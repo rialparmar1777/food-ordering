@@ -1,8 +1,10 @@
-require("dotenv").config();
-const express = require("express");
+const express = require("express"); // Use require instead of import
+const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
+
+dotenv.config();
 
 const app = express();
 
@@ -11,12 +13,12 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to Database
-connectDB().then(() => {
-  console.log("✅ MongoDB Connected Successfully");
-}).catch((err) => {
-  console.error("❌ MongoDB Connection Failed:", err);
-  process.exit(1); // Exit if DB connection fails
-});
+connectDB()
+  .then(() => console.log("✅ MongoDB Connected Successfully"))
+  .catch((err) => {
+    console.error("❌ MongoDB Connection Failed:", err);
+    process.exit(1); // Exit if DB connection fails
+  });
 
 // Routes
 app.use("/api/users", userRoutes);
