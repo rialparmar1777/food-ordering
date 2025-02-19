@@ -3,8 +3,20 @@ import { stripe } from "../../lib/stripe"; // Assuming you have a Stripe instanc
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
-      // Get line items from the request body
-      const { lineItems } = req.body;
+      // Get the cart from the request body (which contains meal details)
+      const { cart } = req.body;
+
+      // Map cart items to Stripe line items format
+      const lineItems = cart.map(meal => ({
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: meal.strMeal,
+          },
+          unit_amount: Math.round(meal.price * 100), // convert to cents
+        },
+        quantity: 1,
+      }));
 
       // Create Stripe checkout session
       const session = await stripe.checkout.sessions.create({
