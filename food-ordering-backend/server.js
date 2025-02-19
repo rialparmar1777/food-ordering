@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const mongoose = require("mongoose");
 
 dotenv.config();
 
@@ -16,13 +15,6 @@ app.use(cors());  // Enable Cross-Origin Resource Sharing
 app.get("/", (req, res) => {
   res.send("Server is running!");
 });
-
-const mongoose = require("mongoose");
-
-mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log("Database connection error: ", err));
 
 
 app.listen(PORT, () => {
